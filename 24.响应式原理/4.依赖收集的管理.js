@@ -22,6 +22,7 @@ class Depend {
  * */
 let targetMap = new WeakMap()
 // 获取depend
+
 function getDepend(target, key) {
   // 根据target获取map
   let map = targetMap.get(target)

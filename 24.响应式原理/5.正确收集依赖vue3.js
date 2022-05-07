@@ -4,7 +4,7 @@ let activeReactiveFn = null
 // 通过类收集响应式函数
 class Depend {
   constructor() {
-    // 去除重复
+    // 用Set去除重复
     this.reactiveFns = new Set()
   }
 
@@ -19,6 +19,25 @@ class Depend {
       fn()
     })
   }
+}
+
+// 获取depend
+function getDepend(target, key) {
+  // 根据target获取map
+  let map = targetMap.get(target)
+  if (!map) {
+    map = new Map()
+    targetMap.set(target, map)
+  }
+
+  // 根据key获取map中的depend
+  let depend = map.get(key)
+  if (!depend) {
+    depend = new Depend()
+    map.set(key, depend)
+  }
+
+  return depend
 }
 
 // 把对象变成响应式对象，然后return
@@ -42,28 +61,8 @@ function reactive(obj) {
 /**
  *  Map中存储key和对应的depend类
  *  weakMap 中存储target - 属性对应的Map
- *
  * */
 let targetMap = new WeakMap()
-// 获取depend
-function getDepend(target, key) {
-  // 根据target获取map
-  let map = targetMap.get(target)
-  if (!map) {
-    map = new Map()
-    targetMap.set(target, map)
-  }
-
-  // 根据key获取depend
-  let depend = map.get(key)
-  if (!depend) {
-    depend = new Depend()
-    map.set(key, depend)
-  }
-
-  return depend
-}
-
 const depend = new Depend()
 
 function watchFn(fn) {
@@ -80,9 +79,12 @@ const objProxy = reactive({
 
 watchFn(function () {
   // 调用get
-
-  console.log(objProxy.name, '----')
   console.log(objProxy.name, '++++')
 })
 
+watchFn(() => {
+  console.log(objProxy.age, '+++')
+})
+
 objProxy.name = 'coder'
+objProxy.age = 20

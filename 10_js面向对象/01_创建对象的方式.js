@@ -6,5 +6,5 @@ obj.age = 12
 // 2. 对象字面量
 let person = {
   name: 'wkb',
-  age: 12
+  age: 12,
 }
