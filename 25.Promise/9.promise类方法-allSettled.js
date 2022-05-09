@@ -16,12 +16,7 @@ const promise3 = new Promise((resolve, reject) => {
   }, 3000)
 })
 
-// 如果传入的promise全都是fullfiled状态，则把成功结果放在数组中返回
-//  如果当中有一个失败，则只返回失败的结果
-Promise.all([promise1, promise2, promise3])
-  .then(res => {
-    console.log(res)
-  })
-  .catch(err => {
-    console.log('err', err)
-  })
+// 只有全部的promise执行完之后，会反返回所有promise的状态和对应的值
+Promise.allSettled([promise1, promise2, promise3]).then(res => {
+  console.log(res)
+})

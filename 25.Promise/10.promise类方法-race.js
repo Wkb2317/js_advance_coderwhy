@@ -1,6 +1,6 @@
 const promise1 = new Promise((resolve, reject) => {
   setTimeout(() => {
-    resolve(111)
+    reject(111)
   }, 1000)
 })
 
@@ -16,9 +16,8 @@ const promise3 = new Promise((resolve, reject) => {
   }, 3000)
 })
 
-// 如果传入的promise全都是fullfiled状态，则把成功结果放在数组中返回
-//  如果当中有一个失败，则只返回失败的结果
-Promise.all([promise1, promise2, promise3])
+// 当其中一个promise的状态发生改变后，就返回状态改变的promise值
+Promise.race([promise1, promise2, promise3])
   .then(res => {
     console.log(res)
   })
