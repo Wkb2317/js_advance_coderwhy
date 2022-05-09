@@ -7,11 +7,16 @@ class MyPromise {
     this.status = STATUS_PENDING
     this.value = undefined
     this.reason = undefined
+    this.onFulfilledFns = []
+    this.onRejectedFns = []
 
     const resolve = value => {
       if (this.status === STATUS_PENDING) {
         this.status = STATUS_FULFILLED
         this.value = value
+        this.onFulfilledFns.forEach(fn => {
+          fn(this.value)
+        })
       }
     }
 
@@ -19,6 +24,9 @@ class MyPromise {
       if (this.status === STATUS_PENDING) {
         this.status = STATUS_REJECTED
         this.reason = reason
+        this.onRejectedFns.forEach(fn => {
+          fn(this.reason)
+        })
       }
     }
 
@@ -26,8 +34,11 @@ class MyPromise {
   }
 
   then(onFulfilled, onRejected) {
-    if (this.status === STATUS_PENDING) return
-    if (this.status === STATUS_FULFILLED) {
+    if (this.status === STATUS_PENDING) {
+      // 异步情况,先暂存数组
+      this.onFulfilledFns.push(onFulfilled)
+      this.onRejectedFns.push(onRejected)
+    } else if (this.status === STATUS_FULFILLED) {
       onFulfilled(this.value)
     } else if (this.status === STATUS_REJECTED) {
       onRejected(this.reason)
