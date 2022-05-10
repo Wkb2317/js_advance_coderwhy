@@ -56,54 +56,52 @@ class MyPromise {
   }
 
   then(onFulfilled, onRejected) {
+    // 给onRejected默认值
+    // 在catch中调用
+    onRejected =
+      onRejected ||
+      (err => {
+        throw err
+      })
+
     // 实现链式调用
     return new MyPromise((resolve, reject) => {
       console.log(this.status)
-      setTimeout(() => {
-        if (this.status === STATUS_PENDING) {
-          // 异步情况,先暂存数组
+      if (this.status === STATUS_PENDING) {
+        // 异步情况,先暂存数组
+        if (onFulfilled)
           this.onFulfilledFns.push(() => {
             execFunctionWithCatchError(onFulfilled, this.value, resolve, reject)
           })
+        if (onRejected)
           this.onRejectedFns.push(() => {
             execFunctionWithCatchError(onRejected, this.reason, resolve, reject)
           })
-        } else if (this.status === STATUS_FULFILLED) {
-          // 如果then传入的第一参数没有返回值，则在onFulfilled传入之前的值就行
-          // 如果then传入的函数有返回值，则获取到返回值，then回调的函数返回值都是成功状态
-          execFunctionWithCatchError(onFulfilled, this.value, resolve, reject)
-        } else if (this.status === STATUS_REJECTED) {
-          execFunctionWithCatchError(onRejected, this.reason, resolve, reject)
-        }
-      })
+      } else if (this.status === STATUS_FULFILLED) {
+        // 如果then传入的第一参数没有返回值，则在onFulfilled传入之前的值就行
+        // 如果then传入的函数有返回值，则获取到返回值，then回调的函数返回值都是成功状态
+        execFunctionWithCatchError(onFulfilled, this.value, resolve, reject)
+      } else if (this.status === STATUS_REJECTED) {
+        execFunctionWithCatchError(onRejected, this.reason, resolve, reject)
+      }
     })
+  }
+
+  catch(onRejected) {
+    this.then(undefined, onRejected)
   }
 }
 
 const promise = new MyPromise((resolve, reject) => {
   // 如果是异步状态下，此时promise的状态还是pending
-  setTimeout(() => {
-    resolve('111')
-  }, 1000)
+  throw new Error('bbb')
 })
-  .then(
-    res => {
-      console.log('res1:', res)
-      return 'aaa'
-      // throw new Error('bbb')
-    },
-    err => {
-      console.log('err1:', err)
-    }
-  )
-  .then(
-    res => {
-      console.log('res2:', res)
-    },
-    err => {
-      console.log('err2:', err)
-    }
-  )
+  .then(res => {
+    console.log('res1:', res)
+  })
+  .catch(err => {
+    console.log('err2:', err)
+  })
 
 // new Promise((resolve, reject) => {
 //   setTimeout(() => {
