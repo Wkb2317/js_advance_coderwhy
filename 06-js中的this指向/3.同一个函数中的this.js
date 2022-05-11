@@ -1,15 +1,14 @@
 function foo() {
-  console.log(this);
+  console.log(this)
 }
 
 foo()
 
 let obj = {
-  name : 'wkb',
-  foo: foo
+  name: 'wkb',
+  foo: foo,
 }
 
 obj.foo()
 
 foo.call('123')
-
