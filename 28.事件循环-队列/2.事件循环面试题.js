@@ -46,3 +46,18 @@ Promise.resolve()
  * 5
  * 6
  */
+
+/**
+ * script start
+ * async1 start
+ * async2
+ * promise1
+ * promise2
+ * script end
+ * nextTick1
+ * async1 end
+ * promise3
+ * setTimeout0
+ * setImmediate
+ * setTimeOut2
+ */
