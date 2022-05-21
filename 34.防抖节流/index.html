@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Document</title>
+</head>
+<body>
+<input type="text"/>
+<button>取消</button>
+
+<script src="./1.实现防抖函数.js"></script>
+<script>
+  const input = document.querySelector('input')
+  const button = document.querySelector('button')
+
+  function onInput(event) {
+    console.log('发送网络请求')
+    console.log(this)
+    console.log(event)
+    return 'abc'
+  }
+
+  const _debounce = debounce(onInput, 2000, true, (res) => {
+    console.log('使用回调函数方式：', res)
+  })
+
+  const tempFun = (...args) => {
+    _debounce.apply(this,args).then(res => {
+      console.log('使用promise方式：', res)
+    })
+  }
+
+  input.oninput = tempFun
+  button.addEventListener('click', () => {
+    _debounce.cancel()
+  })
+</script>
+</body>
+</html>
