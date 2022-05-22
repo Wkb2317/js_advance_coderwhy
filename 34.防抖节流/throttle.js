@@ -13,18 +13,20 @@ function throttle(fn, interval, options = {leading: true, trailing: true}) {
 		if (remainTime <= 0) {
 			lastTime = nowTime
 			fn.apply(this, args)
-			return
+
 		}
 
-		// if(remainTime > 0 && options.trailing) {
-		// 	if(timer){
-		// 		clearTimeout(timer)
-		// 	}
-		// 	timer = setTimeout(() => {
-		// 		fn.apply(this,args)
-		// 		lastTime = options.leading ? 0 : new Date().getTime()
-		// 	},remainTime)
-		// }
+		// 是否是开启执行
+		if(remainTime > 0 && options.trailing) {
+			if(timer){
+				clearTimeout(timer)
+				timer = null
+			}
+			timer = setTimeout(() => {
+				fn.apply(this,args)
+				lastTime = options.leading ? 0 : new Date().getTime()
+			},remainTime)
+		}
 	}
 
 	return _throttle
