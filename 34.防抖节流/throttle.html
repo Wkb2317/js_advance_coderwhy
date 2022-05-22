@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<input type="text">
+<script src="./throttle.js"></script>
+<script>
+	const input = document.querySelector('input')
+	function handleInput(event) {
+		console.log('发送网络请求')
+		console.log(this)
+		console.log(event)
+		return 'aaaa'
+	}
+
+	const _throttle = throttle(handleInput, 2000, {leading: true, trailing: true})
+
+	input.oninput = _throttle
+
+	const tempFn = function (...args) {
+		_debounce.apply(this, args).then(res => {
+			console.log('then中拿到值:',res)
+		})
+	}
+</script>
+</body>
+</html>

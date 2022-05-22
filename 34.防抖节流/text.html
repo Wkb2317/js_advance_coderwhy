@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+<input type="text">
+<script src="./debounce.js"></script>
+<button>取消</button>
+<script>
+  const input = document.querySelector('input')
+  const button = document.querySelector('button')
+  function handleInput(event) {
+	  console.log('发送网络请求')
+	  console.log(this)
+	  console.log(event)
+    return 'aaaa'
+  }
+
+	const _debounce = debounce(handleInput, 3000, true, (res) => {
+		console.log('回调函数拿到的值：',res)
+  })
+
+  const tempFn = function (...args) {
+    _debounce.apply(this, args).then(res => {
+	    console.log('then中拿到值:',res)
+    })
+  }
+  input.oninput = _debounce
+  button.onclick = function (){
+	  _debounce.cancel()
+  }
+</script>
+</body>
+</html>
