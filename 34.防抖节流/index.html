@@ -11,6 +11,7 @@
 <button>取消</button>
 
 <script src="./1.实现防抖函数.js"></script>
+<script src="./2.节流函数.js"></script>
 <script>
   const input = document.querySelector('input')
   const button = document.querySelector('button')
@@ -22,6 +23,7 @@
     return 'abc'
   }
 
+  // 防抖函数
   const _debounce = debounce(onInput, 2000, true, (res) => {
     console.log('使用回调函数方式：', res)
   })
@@ -31,10 +33,16 @@
       console.log('使用promise方式：', res)
     })
   }
+  // input.oninput = tempFun
 
-  input.oninput = tempFun
+  // 节流函数
+  const _throttle = throttle(onInput, 3000, {leading: false, trailing: true}, (res) => {
+    console.log('回调函数返回：',res)
+  })
+  input.oninput =  _throttle
   button.addEventListener('click', () => {
-    _debounce.cancel()
+    // _debounce.cancel()
+    _throttle.cancel()
   })
 </script>
 </body>
